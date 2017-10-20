@@ -1,72 +1,72 @@
+/*
+ * Created by : Aleksandar Petrushevski
+ * Date : 01.09.2017
+	 * Test Word : MULTI
+	 * Test Probability : 0.1 0.3 0.3 0.2 0.1
+	 * Test Result : 0.81602 0.8162
+*/
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class encoder {
+public class Encoder 
+{
 
 	static double high = 1;
-	static double low = 0;
+	static double low = 0.0;
 	static double high_new = 0;
 	static double low_new = 0;
-	static double[][] bukva_prob;
-	static ArrayList<Pairs> pairs = new ArrayList<>();
+	static double[][] letter_prob;
+	static ArrayList<Pairs> pairs = new ArrayList<>(); 
+
 	
-	///MULTI
-	/// 0.1 0.3 0.3 0.2 0.1
 	
 	public static void main(String[] args) 
 	{
-
-		low = 0.0;
+		/* Input Word and Letter probability */
 		Scanner scanner = new Scanner(System.in);
-		System.out.println("Vnesete tekst za kodiranje: ");
+		System.out.println("Enter sequence for coding: ");
 		String input = scanner.nextLine();
-		char[] bukva = input.toCharArray(); 
-		Double[] prob = new Double[bukva.length];
+		char[] letter = input.toCharArray(); 
+		
 
-		int k=0;
-		System.out.println("Vnesete gi verojatnostite na bukvite: ");
-		do
-		{
-			Double inputDouble = scanner.nextDouble();
-			prob[k++] = inputDouble;
-		}while(k<bukva.length);
+		System.out.println("Enter probability for each letter from sequence: ");
+		Double[] probability = new Double[letter.length]; 
+		for(int k=0; k<letter.length; k++) probability[k] = scanner.nextDouble();
 		
 		scanner.close();
+		/* Input End */
 		
-		/* Matrichna struktura za kombinacija Bukva - Verojatnos */
-		bukva_prob = new double[bukva.length][bukva.length]; 
+		/* Matrix for Letter - Probability Combination */
+		letter_prob = new double[letter.length][letter.length]; 
 		
-		for(int i=0; i<bukva.length; i++)
+		for(int i=0; i<letter.length; i++)
 		{
-			bukva_prob[0][i] = bukva[i];
-			bukva_prob[1][i] = prob[i];
+			letter_prob[0][i] = letter[i];
+			letter_prob[1][i] = probability[i];
 		}
 
-		// SORT - Opagjachki redosled
-		bubble_srt(bukva.length);
+		/* Decreasing sort */
+		bubble_srt(letter.length);
 
-		// Proverka na Bubble Sort
-		//for(int i=0; i<zbor.length; i++) System.out.println((char)zbor_prob[0][i] + " " + zbor_prob[1][i]);
-		
-		for(int i=0; i<bukva.length; i++)
+		/* Create Instances of Class Pairs for each letter */
+		for(int i=0; i<letter.length; i++)
 		{
-			pairs.add(new Pairs(low,bukva_prob[1][i],(char)bukva_prob[0][i]));
+			pairs.add(new Pairs(low,letter_prob[1][i],(char)letter_prob[0][i]));
 			low = pairs.get(i).getHigh();
-
 		}
 		
 		high = 1;
 		low  = 0;
 		
-		/* Ciklus Kodiranje */
+		/* Encoding Loop */
 		
-		for(int i=0; i<bukva.length; i++)
+		for(int i=0; i<letter.length; i++)
 		{
 			int j=0;
-			while(j<bukva.length)
+			while(j<letter.length)
 			{
-				if(bukva[i] == (char)bukva_prob[0][j])
+				if(letter[i] == (char)letter_prob[0][j])
 				{
 					encoding(pairs.get(j).getHigh(),pairs.get(j).getLow());
 					break;
@@ -81,7 +81,6 @@ public class encoder {
 
 	private static void encoding(double high_bukva, double low_bukva)   
 	{
-		
 		double range = calcSub(high,low);
 		high = calcSum(low,calcMult(range,high_bukva));
 		low = calcSum(low,calcMult(range,low_bukva));
@@ -113,15 +112,15 @@ public class encoder {
             for (int i = 0; i < length - 1; i++) 
             {
                 k = i + 1;
-                if (bukva_prob[1][i] < bukva_prob[1][k]) 
+                if (letter_prob[1][i] < letter_prob[1][k]) 
                 {
                 	double temp,temp2;
-                    temp = bukva_prob[0][i];
-                    temp2 = bukva_prob[1][i];
-                    bukva_prob[0][i] = bukva_prob[0][k];
-                    bukva_prob[1][i] = bukva_prob[1][k];
-                    bukva_prob[0][k] = temp;
-                    bukva_prob[1][k] = temp2;
+                    temp = letter_prob[0][i];
+                    temp2 = letter_prob[1][i];
+                    letter_prob[0][i] = letter_prob[0][k];
+                    letter_prob[1][i] = letter_prob[1][k];
+                    letter_prob[0][k] = temp;
+                    letter_prob[1][k] = temp2;
                 }
             }
         }

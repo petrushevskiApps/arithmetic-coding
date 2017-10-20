@@ -5,13 +5,13 @@ public class Pairs {
 	double low = 0;
 	double high = 0;
 	double prob = 0;
-	char bukva;
+	char letter;
 	
 	Pairs(double low, double prob, char bukva)
 	{
 		this.low = low;
 		this.prob = prob;
-		this.bukva = bukva;
+		this.letter = bukva;
 	}
 	private double calcHigh()
 	{
